@@ -8,10 +8,8 @@ public interface PersonPersistenceService {
 
     Person getNextToProcess();
 
-    Person getById(int id);
+    Person getById(long id);
 
-    void updateExecutionAttempts(int id, int executionAttempts);
-
-    void updateStatus(int id, String status);
+    void updateStatus(long id, String status);
 
 }

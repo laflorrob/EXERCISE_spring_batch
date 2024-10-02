@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Log4j2
 @AllArgsConstructor
-public class AddAddressJobStep implements Tasklet {
+public class LinkPersonToJobStep implements Tasklet {
 
     private final PersonPersistenceService personPersistenceService;
 
@@ -29,20 +29,11 @@ public class AddAddressJobStep implements Tasklet {
         log.debug("{} has retrieved person from database {}",
                 Thread.currentThread().getName(), person.toString());
 
-        try {
-            Thread.sleep(ThreadLocalRandom.current().nextLong(10000, 30000));
-            if(personId == 2) {
-                throw new RuntimeException("Some unexpected error has occurred");
-            }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        person.setAddress("some address...");
+        person.setJobExecutionId(getJobExecutionId(chunkContext));
         personPersistenceService.save(person);
 
-        log.debug("Person with id {} has been updated with address by {}",
-                person.getId(), Thread.currentThread().getName());
+        log.debug("Person with id {} has been linked to job id {} by {}",
+                person.getId(), getJobExecutionId(chunkContext), Thread.currentThread().getName());
 
         return RepeatStatus.FINISHED;
 
@@ -50,6 +41,10 @@ public class AddAddressJobStep implements Tasklet {
 
     private JobParameters getJobParameters(ChunkContext chunkContext) {
         return getStepExecution(chunkContext).getJobParameters();
+    }
+
+    private Long getJobExecutionId(ChunkContext chunkContext) {
+        return getStepExecution(chunkContext).getJobExecutionId();
     }
 
     private StepExecution getStepExecution(ChunkContext chunkContext) {

@@ -23,6 +23,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class BatchConfig {
 
     @Bean
+    public Tasklet linkPersonToJobTasklet(PersonPersistenceService personPersistenceService) {
+        return new LinkPersonToJobStep(personPersistenceService);
+    }
+
+    @Bean
     public Tasklet addAddressTasklet(PersonPersistenceService personPersistenceService) {
         return new AddAddressJobStep(personPersistenceService);
     }
@@ -40,11 +45,19 @@ public class BatchConfig {
     }
 
     @Bean
+    public Step linkPersonToJobStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
+                               Tasklet linkPersonToJobTasklet) {
+        return new StepBuilder("linkPersonToJobStep", jobRepository)
+                .tasklet(linkPersonToJobTasklet, transactionManager)
+                .startLimit(3)
+                .build();
+    }
+
+    @Bean
     public Step addAddressStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
                                   Tasklet addAddressTasklet, ExecutionContextPromotionListener promotionListener) {
         return new StepBuilder("addAddressStep", jobRepository)
                 .tasklet(addAddressTasklet, transactionManager)
-                .listener(promotionListener)
                 .startLimit(3)
                 .build();
     }
@@ -63,10 +76,11 @@ public class BatchConfig {
     }
 
     @Bean
-    public Job enrichPersonJob(JobRepository jobRepository, Step addAddressStep, Step addGenderStep,
-                               JobExecutionListener enrichPersonJobListener) {
+    public Job enrichPersonJob(JobRepository jobRepository, Step linkPersonToJobStep, Step addAddressStep,
+                               Step addGenderStep, JobExecutionListener enrichPersonJobListener) {
         return new JobBuilder("enrichPersonJob", jobRepository)
-                .start(addAddressStep)
+                .start(linkPersonToJobStep)
+                .next(addAddressStep)
                 .next(addGenderStep)
                 .listener(enrichPersonJobListener)
                 .build();

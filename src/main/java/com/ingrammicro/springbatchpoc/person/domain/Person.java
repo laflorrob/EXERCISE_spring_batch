@@ -6,16 +6,16 @@ import java.time.LocalDateTime;
 @Data
 public class Person {
 
-    private int id;
+    private long id;
     private String name;
     private String lastName;
     private int age;
     private String country;
     private LocalDateTime creationDate;
     private String address;
-    private String status;
+    private EnrichingStatus enrichingStatus;
     private String gender;
-    private int jobExecutionId;
+    private long jobExecutionId;
     private int jobExecutionAttempts;
 
 

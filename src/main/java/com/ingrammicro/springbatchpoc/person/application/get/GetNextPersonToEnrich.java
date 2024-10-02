@@ -1,5 +1,6 @@
 package com.ingrammicro.springbatchpoc.person.application.get;
 
+import com.ingrammicro.springbatchpoc.person.domain.EnrichingStatus;
 import com.ingrammicro.springbatchpoc.person.port.in.GetNextPersonToEnrichService;
 import com.ingrammicro.springbatchpoc.person.port.out.PersonPersistenceService;
 import com.ingrammicro.springbatchpoc.person.domain.Person;
@@ -32,7 +33,7 @@ public class GetNextPersonToEnrich implements GetNextPersonToEnrichService {
             return person;
         }
 
-        person.setStatus("PROCESSING");
+        person.setEnrichingStatus(EnrichingStatus.PROCESSING);
         personPersistenceService.save(person);
 
         log.info("{} has found a person to enrich so enrichPersonJob will be launched",

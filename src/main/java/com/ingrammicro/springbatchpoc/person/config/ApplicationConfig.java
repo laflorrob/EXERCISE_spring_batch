@@ -40,10 +40,9 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public EnrichPersonJobScheduler enrichPersonScheduler(GetNextPersonToEnrichService getNextPersonToProcess,
-                                                          Job enrichPersonJob, JobOperator jobOperator,
-                                                          JobLauncher jobLauncher) {
-        return new EnrichPersonJobScheduler(getNextPersonToProcess, enrichPersonJob, jobLauncher, jobOperator);
+    public EnrichPersonJobScheduler enrichPersonJobLauncher(GetNextPersonToEnrichService getNextPersonToProcess,
+                                                            Job enrichPersonJob, JobLauncher jobLauncher) {
+        return new EnrichPersonJobScheduler(getNextPersonToProcess, enrichPersonJob, jobLauncher);
     }
 
 }

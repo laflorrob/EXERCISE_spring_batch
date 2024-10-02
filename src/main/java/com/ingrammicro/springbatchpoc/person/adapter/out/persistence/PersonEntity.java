@@ -12,7 +12,7 @@ public class PersonEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private long id;
 
     private String name;
 
@@ -33,9 +33,6 @@ public class PersonEntity {
     private String status;
 
     @Column(name = "JOB_EXECUTION_ID")
-    private int jobExecutionId;
-
-    @Column(name = "JOB_EXECUTION_ATTEMPTS")
-    private int jobExecutionAttempts;
+    private long jobExecutionId;
 
 }

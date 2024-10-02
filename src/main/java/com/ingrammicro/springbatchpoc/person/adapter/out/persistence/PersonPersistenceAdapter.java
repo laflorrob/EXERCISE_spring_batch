@@ -1,5 +1,6 @@
 package com.ingrammicro.springbatchpoc.person.adapter.out.persistence;
 
+import com.ingrammicro.springbatchpoc.person.domain.EnrichingStatus;
 import com.ingrammicro.springbatchpoc.person.port.out.PersonPersistenceService;
 import com.ingrammicro.springbatchpoc.person.domain.Person;
 import lombok.AllArgsConstructor;
@@ -24,20 +25,12 @@ public class PersonPersistenceAdapter implements PersonPersistenceService {
     }
 
     @Override
-    public Person getById(int id) {
-        return toDomain(personRepository.findById(id).orElse(new PersonEntity()));
+    public Person getById(long id) {
+        return toDomain(personRepository.findById((int) id).orElse(new PersonEntity()));
     }
 
     @Override
-    public void updateExecutionAttempts(int id, int executionAttempts) {
-        PersonEntity personEntity = new PersonEntity();
-        personEntity.setId(id);
-        personEntity.setJobExecutionAttempts(executionAttempts);
-        personRepository.save(personEntity);
-    }
-
-    @Override
-    public void updateStatus(int id, String status) {
+    public void updateStatus(long id, String status) {
         PersonEntity personEntity = new PersonEntity();
         personEntity.setId(id);
         personEntity.setStatus(status);
@@ -52,11 +45,10 @@ public class PersonPersistenceAdapter implements PersonPersistenceService {
         personEntity.setAge(person.getAge());
         personEntity.setCreationDate(person.getCreationDate());
         personEntity.setAddress(person.getAddress());
-        personEntity.setStatus(person.getStatus());
+        personEntity.setStatus(person.getEnrichingStatus().toString());
         personEntity.setGender(person.getGender());
         personEntity.setCountry(person.getCountry());
         personEntity.setJobExecutionId(person.getJobExecutionId());
-        personEntity.setJobExecutionAttempts(personEntity.getJobExecutionAttempts());
         return personEntity;
     }
 
@@ -68,11 +60,10 @@ public class PersonPersistenceAdapter implements PersonPersistenceService {
         person.setAge(entity.getAge());
         person.setCreationDate(entity.getCreationDate());
         person.setAddress(entity.getAddress());
-        person.setStatus(entity.getStatus());
+        person.setEnrichingStatus(EnrichingStatus.valueOf(entity.getStatus()));
         person.setGender(entity.getGender());
         person.setCountry(entity.getCountry());
         person.setJobExecutionId(entity.getJobExecutionId());
-        person.setJobExecutionAttempts(entity.getJobExecutionAttempts());
         return person;
     }
 
