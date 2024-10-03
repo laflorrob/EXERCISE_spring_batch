@@ -31,9 +31,10 @@ public class AddAddressJobStep implements Tasklet {
 
         try {
             Thread.sleep(ThreadLocalRandom.current().nextLong(10000, 30000));
-            if(personId == 2) {
-                throw new RuntimeException("Some unexpected error has occurred");
-            }
+            //Uncomment next lines if you want to force job failure in order to see how job is retried
+            //            if(personId == 2) {
+//                throw new RuntimeException("Some unexpected error has occurred");
+//            }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
