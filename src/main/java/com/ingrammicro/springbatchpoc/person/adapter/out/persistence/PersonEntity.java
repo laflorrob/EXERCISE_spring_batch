@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 public class PersonEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "person_generator")
+    @SequenceGenerator(name = "person_generator", sequenceName = "person_seq", allocationSize = 1)
     private long id;
 
     private String name;

@@ -21,37 +21,37 @@ public class DatabaseConfig {
 
     private final Environment env;
 
-    @Bean
-    public DataSource applicationDataSource(){
-        return DataSourceBuilder.create()
-                .url(env.getProperty("spring.datasource.url"))
-                .driverClassName(env.getProperty("spring.datasource.driver-class-name"))
-                .username(env.getProperty("spring.datasource.username"))
-                .password(env.getProperty("spring.datasource.password"))
-                .build();
-    }
-
-    @Bean
-    @Primary
-    public DataSource springBatchDataSource(){
-        return DataSourceBuilder.create()
-                .url(env.getProperty("spring.batch.datasource.url"))
-                .driverClassName(env.getProperty("spring.datasource.driver-class-name"))
-                .username(env.getProperty("spring.datasource.username"))
-                .password(env.getProperty("spring.datasource.password"))
-                .build();
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder) {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("hibernate.hbm2ddl.auto", "update");
-        return builder
-                .dataSource(applicationDataSource())
-                .packages("com.ingrammicro.springbatchpoc.person")
-                .persistenceUnit("default")
-                .properties(properties)
-                .build();
-    }
+//    @Bean
+//    public DataSource applicationDataSource(){
+//        return DataSourceBuilder.create()
+//                .url(env.getProperty("spring.datasource.url"))
+//                .driverClassName(env.getProperty("spring.datasource.driver-class-name"))
+//                .username(env.getProperty("spring.datasource.username"))
+//                .password(env.getProperty("spring.datasource.password"))
+//                .build();
+//    }
+//
+//    @Bean
+//    @Primary
+//    public DataSource springBatchDataSource(){
+//        return DataSourceBuilder.create()
+//                .url(env.getProperty("spring.batch.datasource.url"))
+//                .driverClassName(env.getProperty("spring.datasource.driver-class-name"))
+//                .username(env.getProperty("spring.datasource.username"))
+//                .password(env.getProperty("spring.datasource.password"))
+//                .build();
+//    }
+//
+//    @Bean
+//    public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder) {
+//        Map<String, Object> properties = new HashMap<>();
+//        properties.put("hibernate.hbm2ddl.auto", "update");
+//        return builder
+//                .dataSource(applicationDataSource())
+//                .packages("com.ingrammicro.springbatchpoc.person")
+//                .persistenceUnit("default")
+//                .properties(properties)
+//                .build();
+//    }
 
 }

@@ -26,25 +26,47 @@ public class EnrichPersonJobScheduler {
     @Async("enrichPersonThreadPool")
     public void doTask() {
 
-        Person person = getNextPersonToProcess.get();
+        Person person = getNextPersonToProcess();
 
         if(!person.isEmpty()) {
+            launchJob(person);
+        }
 
-            try {
+    }
 
-                JobParameters parameters = new JobParametersBuilder()
-                        .addLong("PERSON_ID", person.getId())
-                        .toJobParameters();
+    private Person getNextPersonToProcess() {
 
-                jobLauncher.run(enrichPersonJob, parameters);
+        Person person = new Person();
 
-            } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException |
-                     JobParametersInvalidException | StartLimitExceededException e) {
+        try {
 
-                throw new RuntimeException("Some error prevents launching enrich person job", e);
+            person = getNextPersonToProcess.get();
 
-            }
+        } catch(Exception e) {
 
+            log.error("{} has been not allowed by exception {} to get some person to enrich",
+                    Thread.currentThread().getName(), e.getClass().getName());
+
+        }
+
+        return person;
+
+    }
+
+    private void launchJob(Person person) {
+
+        try {
+
+            JobParameters parameters = new JobParametersBuilder()
+                    .addLong("PERSON_ID", person.getId())
+                    .toJobParameters();
+
+            jobLauncher.run(enrichPersonJob, parameters);
+
+        } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException |
+                 JobParametersInvalidException | StartLimitExceededException e) {
+
+            log.error("Not possible to launch Job because {}", e.getMessage());
         }
 
     }

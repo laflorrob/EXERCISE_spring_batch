@@ -28,11 +28,7 @@ public class AddGenderJobStep implements Tasklet {
         log.debug("{} is adding gender to person with id {}",
                 Thread.currentThread().getName(), person.getId());
 
-        try {
-            Thread.sleep(ThreadLocalRandom.current().nextLong(10000, 30000));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        Thread.sleep(ThreadLocalRandom.current().nextLong(10000, 30000));
 
         person.setGender("some gender...");
         personPersistenceService.save(person);
